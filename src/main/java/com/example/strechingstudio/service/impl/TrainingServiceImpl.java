@@ -1,11 +1,12 @@
-// Реализация сервиса
 package com.example.strechingstudio.service.impl;
 
 import com.example.strechingstudio.model.Training;
+import com.example.strechingstudio.model.TrainingRequest;
 import com.example.strechingstudio.repository.TrainingRepository;
 import com.example.strechingstudio.service.TrainingService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,16 +20,40 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public List<Training> getUpcomingTrainings() {
-        return trainingRepository.findByIsCompleted(false);
+        List<Training> trainings = trainingRepository.findByIsCompleted(false);
+        if (trainings == null || trainings.isEmpty()) {
+            System.out.println("No upcoming trainings found.");
+        }
+        return trainings;
     }
 
     @Override
     public List<Training> getPastTrainings() {
-        return trainingRepository.findByIsCompleted(true);
+        List<Training> trainings = trainingRepository.findByIsCompleted(true);
+        if (trainings == null || trainings.isEmpty()) {
+            System.out.println("No past trainings found.");
+        }
+        return trainings;
+    }
+
+
+    @Override
+    public void signUpForTraining(Long trainingId, Long userId) {
+
     }
 
     @Override
-    public void signUpForTraining(Long trainingId) {
-        // Реализация записи на тренировку
+    public List<TrainingRequest> getAllTrainingRequests() {
+        return List.of();
     }
+
+    @Override
+    public void updateTrainingRequestStatus(Long requestId, boolean isApproved) {
+
+    }
+
+    public void signUpForTraining(Long trainingId) {
+
+    }
+
 }

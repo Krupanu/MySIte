@@ -1,113 +1,69 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
->
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Registration and Login System</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-        crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlexStudio - Регистрация</title>
+  <link href="/static/css/styles.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
-    <a class="navbar-brand" th:href="@{/index}">MyStudio</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" th:href="@{/index}">FlexStudio</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" th:href="@{/login}">Вход</a>
-        </li>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" th:href="@{/login}">Вход</a></li>
+        <li class="nav-item"><a class="nav-link active" th:href="@{/register}">Регистрация</a></li>
       </ul>
     </div>
   </div>
 </nav>
-<br /><br /><br />
-<div class="container">
-  <div class="row col-md-8 offset-md-2">
-    <div class="card">
-      <div class="card-header">
-        <h2 class="text-center">Регистрация</h2>
-      </div>
-      <div th:if="${param.success}">
-        <div class="alert alert-info">
-          Вы были успешно зарегестрированы!
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Регистрация</div>
+        <div class="card-body">
+          <div th:if="${param.success}" class="alert alert-success">
+            Вы успешно зарегистрировались! <a th:href="@{/login}">Войдите</a>.
+          </div>
+          <form method="post" th:action="@{/register/save}" th:object="${user}">
+            <div class="mb-3">
+              <label for="firstName" class="form-label">Имя</label>
+              <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Введите имя" th:field="*{firstName}" required>
+              <div th:if="${#fields.hasErrors('firstName')}" class="text-danger" th:errors="*{firstName}"></div>
+            </div>
+            <div class="mb-3">
+              <label for="lastName" class="form-label">Фамилия</label>
+              <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Введите фамилию" th:field="*{lastName}" required>
+              <div th:if="${#fields.hasErrors('lastName')}" class="text-danger" th:errors="*{lastName}"></div>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" name="email" class="form-control" placeholder="Введите email" th:field="*{email}" required>
+              <div th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></div>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Пароль</label>
+              <input type="password" id="password" name="password" class="form-control" placeholder="Введите пароль" th:field="*{password}" required>
+              <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+          </form>
         </div>
-      </div>
-      <div class="card-body">
-        <form
-                method="post"
-                role="form"
-                th:action="@{/register/save}"
-                th:object="${user}"
-        >
-          <div class="form-group mb-3">
-            <label class="form-label">Имя</label>
-            <input
-                    class="form-control"
-                    id="firstName"
-                    name="firstName"
-                    placeholder="Введите имя"
-                    th:field="*{firstName}"
-                    type="text"
-            />
-            <p th:errors = "*{firstName}" class="text-danger"
-               th:if="${#fields.hasErrors('firstName')}"></p>
-          </div>
-
-          <div class="form-group mb-3">
-            <label class="form-label">Фамилия</label>
-            <input
-                    class="form-control"
-                    id="lastName"
-                    name="lastName"
-                    placeholder="Введите фамилию"
-                    th:field="*{lastName}"
-                    type="text"
-            />
-            <p th:errors = "*{lastName}" class="text-danger"
-               th:if="${#fields.hasErrors('lastName')}"></p>
-          </div>
-
-          <div class="form-group mb-3">
-            <label class="form-label">Email</label>
-            <input
-                    class="form-control"
-                    id="email"
-                    name="email"
-                    placeholder="Введите email"
-                    th:field="*{email}"
-                    type="email"
-            />
-            <p th:errors = "*{email}" class="text-danger"
-               th:if="${#fields.hasErrors('email')}"></p>
-          </div>
-
-          <div class="form-group mb-3">
-            <label class="form-label">Пароль</label>
-            <input
-                    class="form-control"
-                    id="password"
-                    name="password"
-                    placeholder="Введите пароль"
-                    th:field="*{password}"
-                    type="password"
-            />
-            <p th:errors = "*{password}" class="text-danger"
-               th:if="${#fields.hasErrors('password')}"></p>
-          </div>
-          <div class="form-group">
-            <button class="btn btn-primary" type="submit">Регистрация</button>
-            <span>Уже зарегестрирован? <a th:href="@{/login}">Войти в аккаунт</a></span>
-          </div>
-        </form>
+        <div class="card-footer text-center">
+          <span>Уже зарегистрированы? <a th:href="@{/login}">Войти</a></span>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

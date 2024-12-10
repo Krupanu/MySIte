@@ -1,4 +1,3 @@
-// Добавляем сущность для тренировок
 package com.example.strechingstudio.model;
 
 import jakarta.persistence.*;
@@ -16,6 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "trainings")
 public class Training {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,4 +28,7 @@ public class Training {
 
     @Column(nullable = false)
     private boolean isCompleted;
+
+    @Column // Поле не сохраняется в базу, только для отображения
+    private String formattedDateTime;
 }

@@ -1,12 +1,12 @@
 package com.example.strechingstudio.config;
 
+import com.example.strechingstudio.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,8 +16,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SpringSecurity {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
+
+    public SpringSecurity(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -28,22 +31,40 @@ public class SpringSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/login","/register","/trainings", "/subscriptions").permitAll() // Эти страницы доступны всем
+                        .requestMatchers("/register/**", "/login", "/register", "/trainings", "/subscriptions").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Доступ только для администратора
+                        .requestMatchers("/users").hasRole("ADMIN")
+                        .requestMatchers("/requests/pending").hasRole("ADMIN")
                         .anyRequest().authenticated() // Остальные страницы требуют авторизации
                 )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/subscriptions",true)
-                        .permitAll()
+                .formLogin(
+                        form -> form
+                                .loginPage("/login")
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("/trainings", true)
+                                .permitAll()
+                )
+                .logout(
+                        logout -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .logoutSuccessUrl("/login?logout")
+                                .permitAll()
                 );
-
 
         return http.build();
     }
 
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        PasswordEncoder encoder = passwordEncoder();
+
+        // Жестко заданный администратор
+        auth.inMemoryAuthentication()
+                .withUser("admin@gmail.com")
+                .password(encoder.encode("Admin"))
+                .roles("ADMIN");
+
+        // Пользователи из базы данных
+        auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
     }
 }

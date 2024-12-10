@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        // Устанавливаем роль USER
+        // Назначаем роль USER
         Role role = roleRepository.findByName("ROLE_USER");
         if (role == null) {
             role = new Role();
@@ -74,14 +74,20 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    private UserDto convertEntityToDto(User user){
+    private UserDto convertEntityToDto(User user) {
         UserDto userDto = new UserDto();
-        String[] name = user.getName().split(" ");
-        userDto.setFirstName(name[0]);
-        userDto.setLastName(name[1]);
+
+        // Разделяем имя пользователя
+        String[] nameParts = user.getName().split(" ", 2);
+
+        // Проверяем наличие имени и фамилии
+        userDto.setFirstName(nameParts[0]); // Первое слово всегда есть
+        userDto.setLastName(nameParts.length > 1 ? nameParts[1] : ""); // Если фамилии нет, оставляем пустой строкой
+
         userDto.setEmail(user.getEmail());
         return userDto;
     }
+
 
     private Role checkRoleExist() {
         Role role = new Role();
