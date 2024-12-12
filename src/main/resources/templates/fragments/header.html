@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/index}">FlexStudio</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="nav-link" th:href="@{/users}">Пользователи</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/trainings}">Тренировки</a>
+                </li>
+                <li class="nav-item" sec:authorize="!hasRole('ROLE_ADMIN')">
+                    <a class="nav-link" th:href="@{/subscriptions}">Подписки</a>
+                </li>
+                <li class="nav-item" sec:authorize="!hasRole('ROLE_ADMIN')">
+                    <a class="nav-link" th:href="@{/requests/user}">Мои заявки</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="nav-link" th:href="@{/requests/pending}">Все заявки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">Выход</a>
+                </li>
+            </ul>
+        </div>
+        <div class="text-end mb-4">
+            <div sec:authorize="isAuthenticated()">
+                <p class="mb-0">Вы вошли как: <strong sec:authentication="name"></strong></p>
+                <p class="text-muted" sec:authorize="hasRole('ROLE_ADMIN')">Администратор</p>
+                <p class="text-muted" sec:authorize="!hasRole('ROLE_ADMIN')">Пользователь</p>
+            </div>
+            <div sec:authorize="!isAuthenticated()">
+                <p class="text-muted">Вы не авторизованы.</p>
+            </div>
+        </div>
+    </div>
+</nav>
+</body>
+</html>
