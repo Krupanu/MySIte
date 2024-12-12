@@ -10,4 +10,5 @@ public interface TrainingRequestService {
     List<TrainingRequest> getRequestsByUser(Long userId);
     List<TrainingRequest> getAllPendingRequests();
     TrainingRequest updateRequestStatus(Long requestId, String status);
+    TrainingRequest cancelRequest (Long requestId);
 }

@@ -8,32 +8,49 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">FlexStudio</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link active" th:href="@{/trainings}">Тренировки</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/subscriptions}">Подписки</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/requests/user}">Мои заявки</a></li>
-                <li class="nav-item" th:if="${isAdmin}"><a class="nav-link" th:href="@{/users}">Пользователи</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Выйти</a></li>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item" th:if="${isAdmin}">
+                    <a class="nav-link" th:href="@{/users}">Пользователи</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/trainings}">Тренировки</a>
+                </li>
+                <li class="nav-item" th:if="${!isAdmin}">
+                    <a class="nav-link" th:href="@{/subscriptions}">Подписки</a>
+                </li>
+                <li class="nav-item" th:if="${!isAdmin}">
+                    <a class="nav-link" th:href="@{/requests/user}">Мои заявки</a>
+                </li>
+                <li class="nav-item" th:if="${isAdmin}">
+                    <a class="nav-link" th:href="@{/requests/pending}">Все заявки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">Выход</a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+
 <div class="container mt-5">
     <h1 class="text-center">Тренировки</h1>
+    <div class="text-end mb-4" th:if="${isAdmin}">
+        <a href="/trainings/add" class="btn btn-success">Добавить занятие</a>
+    </div>
     <div class="mt-4">
         <h2>Предстоящие тренировки</h2>
         <ul class="list-group">
             <li class="list-group-item" th:each="training : ${upcomingTrainings}">
                 <h4 th:text="${training.title}"></h4>
                 <p><strong>Дата:</strong> <span th:text="${training.formattedDateTime}"></span></p>
-                <form th:action="@{/requests/create(trainingId=${training.id})}" method="post">
+                <form th:action="@{/requests/create(trainingId=${training.id})}" method="post" th:if="${!isAdmin}">
                     <button type="submit" class="btn btn-primary btn-sm">Записаться</button>
                 </form>
             </li>

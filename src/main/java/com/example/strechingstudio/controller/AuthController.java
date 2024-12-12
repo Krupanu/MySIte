@@ -5,6 +5,9 @@ import com.example.strechingstudio.dto.UserDto;
 import com.example.strechingstudio.model.User;
 import com.example.strechingstudio.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +27,15 @@ public class AuthController {
     }
 
     @GetMapping("index")
-    public String home(){
+    public String home(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object userDetails = authentication.getDetails();
+        if (userDetails instanceof UserDetails) {
+            model.addAttribute("userName",((UserDetails)userDetails).getUsername());
+        }
+
+        model.addAttribute("isAdmin",authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
+        model.addAttribute("authentication", authentication);
         return "index";
     }
 

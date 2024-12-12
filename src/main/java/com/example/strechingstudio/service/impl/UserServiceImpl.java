@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        // Назначаем роль USER
         Role role = roleRepository.findByName("ROLE_USER");
         if (role == null) {
             role = new Role();
@@ -46,21 +45,6 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
     }
-//    public void saveUser(UserDto userDto) {
-//        User user = new User();
-//        user.setName(userDto.getFirstName() + " " + userDto.getLastName());
-//        user.setEmail(userDto.getEmail());
-//
-//        //encrypt the password once we integrate spring security
-//        //user.setPassword(userDto.getPassword());
-//        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-//        Role role = roleRepository.findByName("ROLE_ADMIN");
-//        if(role == null){
-//            role = checkRoleExist();
-//        }
-//        user.setRoles(Arrays.asList(role));
-//        userRepository.save(user);
-//    }
 
     @Override
     public User findByEmail(String email) {
@@ -77,12 +61,12 @@ public class UserServiceImpl implements UserService {
     private UserDto convertEntityToDto(User user) {
         UserDto userDto = new UserDto();
 
-        // Разделяем имя пользователя
+
         String[] nameParts = user.getName().split(" ", 2);
 
-        // Проверяем наличие имени и фамилии
-        userDto.setFirstName(nameParts[0]); // Первое слово всегда есть
-        userDto.setLastName(nameParts.length > 1 ? nameParts[1] : ""); // Если фамилии нет, оставляем пустой строкой
+
+        userDto.setFirstName(nameParts[0]);
+        userDto.setLastName(nameParts.length > 1 ? nameParts[1] : "");
 
         userDto.setEmail(user.getEmail());
         return userDto;

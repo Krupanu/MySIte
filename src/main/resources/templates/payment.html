@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlexStudio - Оплата</title>
+  <link href="/static/css/styles.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" th:href="@{/index}">FlexStudio</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/trainings}">Тренировки</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/subscriptions}">Подписки</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/requests/user}">Мои заявки</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/logout}">Выход</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h1 class="text-center">Оплата</h1>
+  <div class="card mt-4">
+    <div class="card-header text-center">Введите данные для оплаты</div>
+    <div class="card-body">
+      <form action="/subscriptions/pay" method="post">
+        <div class="mb-3">
+          <label for="cardNumber" class="form-label">Номер карты</label>
+          <input type="text" class="form-control" id="cardNumber" name="cardNumber" required>
+        </div>
+        <div class="mb-3">
+          <label for="expiryDate" class="form-label">Дата действия</label>
+          <input type="text" class="form-control" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+        </div>
+        <div class="mb-3">
+          <label for="cvv" class="form-label">CVV код</label>
+          <input type="password" class="form-control" id="cvv" name="cvv" required>
+        </div>
+        <button type="submit" class="btn btn-success">Оплатить</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

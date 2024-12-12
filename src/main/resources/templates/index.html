@@ -1,3 +1,6 @@
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -8,31 +11,86 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">FlexStudio</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" th:href="@{/trainings}">Тренировки</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/subscriptions}">Подписки</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/requests/user}">Мои заявки</a></li>
-                <li class="nav-item" th:if="${isAdmin}"><a class="nav-link" th:href="@{/users}">Пользователи</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Выйти</a></li>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item" th:if="${isAdmin}">
+                    <a class="nav-link" th:href="@{/users}">Пользователи</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/trainings}">Тренировки</a>
+                </li>
+                <li class="nav-item" th:if="${!isAdmin}">
+                    <a class="nav-link" th:href="@{/subscriptions}">Подписки</a>
+                </li>
+                <li class="nav-item" th:if="${!isAdmin}">
+                    <a class="nav-link" th:href="@{/requests/user}">Мои заявки</a>
+                </li>
+                <li class="nav-item" th:if="${isAdmin}">
+                    <a class="nav-link" th:href="@{/requests/pending}">Все заявки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">Выход</a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+
 <div class="container mt-5">
-    <div class="card">
-        <div class="card-header">Добро пожаловать в FlexStudio</div>
+    <div class="text-end mb-4">
+        <div th:if="${authentication != null}">
+            <p class="mb-0">Вы вошли как: <strong th:text="${userName}"></strong></p>
+            <p class="text-muted" th:if="${isAdmin}">Администратор</p>
+            <p class="text-muted" th:if="${!isAdmin}">Пользователь</p>
+        </div>
+        <div th:if="${authentication == null}">
+            <p class="text-muted">Вы не авторизованы.</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <img src="/images/stretching.jpg" class="img-fluid rounded" alt="Занятие по растяжке">
+        </div>
+        <div class="col-lg-6">
+            <h2>Добро пожаловать в FlexStudio</h2>
+            <p>FlexStudio — это студия, созданная для тех, кто хочет стать гибким, сильным и уверенным в своем теле. Наши тренировки подходят как для начинающих, так и для опытных спортсменов. Мы предлагаем:</p>
+            <ul>
+                <li>Групповые и индивидуальные занятия</li>
+                <li>Разнообразные тренировки: от стретчинга до йоги</li>
+                <li>Удобные подписки для всех уровней подготовки</li>
+            </ul>
+            <p>Присоединяйтесь к нам сегодня и ощутите, как ваше тело становится лучше с каждым занятием!</p>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Расписание тренировок</div>
         <div class="card-body">
-            <p>Добро пожаловать в нашу студию растяжки. Выберите интересующий вас раздел в меню навигации.</p>
+            <p>Узнайте расписание занятий и выберите удобное время для тренировок:</p>
+            <ul>
+                <li>Понедельник - Пятница: с 8:00 до 21:00</li>
+                <li>Суббота/Воскресенье: с 9:00 до 18:00</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Контакты</div>
+        <div class="card-body text-center">
+            <p><strong>Адрес:</strong> г. Минск, ул. Леонида Беды, д. 4</p>
+            <p><strong>Телефон:</strong> +375 29 74983219</p>
+            <p><strong>Email:</strong> flexstudio@gmail.com</p>
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
