@@ -2,7 +2,9 @@ package com.example.strechingstudio.controller;
 
 import com.example.strechingstudio.model.TrainingRequest;
 import com.example.strechingstudio.service.TrainingRequestService;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +31,13 @@ public class TrainingRequestController {
 
     @GetMapping("/user")
     public String getUserRequests(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (userDetails instanceof UserDetails) {
+            model.addAttribute("userName",((UserDetails)userDetails).getUsername());
+        }
+
+        model.addAttribute("isAdmin",authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
+        model.addAttribute("authentication", authentication);
         Long userId = getUserIdFromDetails(userDetails);
         List<TrainingRequest> requests = trainingRequestService.getRequestsByUser(userId);
         model.addAttribute("requests", requests);
@@ -37,6 +46,14 @@ public class TrainingRequestController {
 
     @GetMapping("/pending")
     public String getPendingRequests(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object userDetails = authentication.getDetails();
+        if (userDetails instanceof UserDetails) {
+            model.addAttribute("userName",((UserDetails)userDetails).getUsername());
+        }
+
+        model.addAttribute("isAdmin",authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
+        model.addAttribute("authentication", authentication);
         List<TrainingRequest> requests = trainingRequestService.getAllPendingRequests();
         model.addAttribute("pendingRequests", requests);
         return "admin_requests";
@@ -50,7 +67,6 @@ public class TrainingRequestController {
             return "redirect:/requests/pending?error";
         }
 
-        // Обновляем статус заявки
         try {
             trainingRequestService.updateRequestStatus(requestId, status.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -59,6 +75,17 @@ public class TrainingRequestController {
         }
 
         return "redirect:/requests/pending?success";
+    }
+
+    @PostMapping("/cancel")
+    public String cancelRequest(@RequestParam Long requestId, Model model) {
+        try {
+            trainingRequestService.cancelRequest(requestId);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "redirect:/requests/user?error";
+        }
+        return "redirect:/requests/user?success";
     }
 
     private Long getUserIdFromDetails(UserDetails userDetails) {

@@ -16,5 +16,5 @@ public interface TrainingService {
 
     List<TrainingRequest> getAllTrainingRequests();
 
-    void updateTrainingRequestStatus(Long requestId, boolean isApproved);
+    void saveTraining(Training training);
 }

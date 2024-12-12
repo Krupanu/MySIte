@@ -48,12 +48,9 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
-    public void updateTrainingRequestStatus(Long requestId, boolean isApproved) {
-
-    }
-
-    public void signUpForTraining(Long trainingId) {
-
+    public void saveTraining(Training training) {
+        training.setDateTime(LocalDateTime.now());
+        trainingRepository.save(training);
     }
 
 }

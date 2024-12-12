@@ -1,9 +1,11 @@
 // File: src/main/java/com/example/strechingstudio/config/DataInitializer.java
 package com.example.strechingstudio.config;
 
+import com.example.strechingstudio.model.Role;
 import com.example.strechingstudio.model.Subscription;
 import com.example.strechingstudio.model.Training;
 import com.example.strechingstudio.model.User;
+import com.example.strechingstudio.repository.RoleRepository;
 import com.example.strechingstudio.repository.SubscriptionRepository;
 import com.example.strechingstudio.repository.TrainingRepository;
 import com.example.strechingstudio.repository.UserRepository;
@@ -18,7 +20,7 @@ import java.time.LocalDateTime;
 public class DataInitializer {
 
     @Bean
-    public CommandLineRunner initializeData(SubscriptionRepository subscriptionRepository, TrainingRepository trainingRepository) {
+    public CommandLineRunner initializeData(SubscriptionRepository subscriptionRepository, TrainingRepository trainingRepository, RoleRepository roleRepository) {
         return args -> {
             if (subscriptionRepository.count() == 0) {
                 subscriptionRepository.save(new Subscription(null, "Базовая", "Доступ к 4 тренировкам в месяц", 29.99));

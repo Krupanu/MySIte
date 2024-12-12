@@ -8,25 +8,63 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">FlexStudio</a>
-    </div>
-</nav>
-<div class="container mt-5">
-    <div class="card">
-        <div class="card-header">Подписки</div>
-        <div class="card-body">
-            <ul class="list-group">
-                <li class="list-group-item" th:each="subscription : ${subscriptions}">
-                    <h4 th:text="${subscription.name}"></h4>
-                    <p th:text="${subscription.description}"></p>
-                    <p><strong>Цена:</strong> <span th:text="${subscription.price} + ' ₽'"></span></p>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/trainings}">Тренировки</a>
+                </li>
+                <li class="nav-item" th:if="${!isAdmin}">
+                    <a class="nav-link" th:href="@{/subscriptions}">Подписки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/requests/user}">Мои заявки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">Выход</a>
                 </li>
             </ul>
         </div>
     </div>
+</nav>
+
+<div class="container mt-5">
+    <h1 class="text-center">Подписки</h1>
+    <div class="card mt-4">
+        <div class="card-header text-center">Доступные подписки</div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Цена</th>
+                    <th>Действие</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="subscription : ${subscriptions}">
+                    <td th:text="${subscription.name}"></td>
+                    <td th:text="${subscription.description}"></td>
+                    <td th:text="${subscription.price}"></td>
+                    <td>
+                        <form action="/subscriptions/subscribe" method="post">
+                            <input type="hidden" name="subscriptionId" th:value="${subscription.id}">
+                            <button type="submit" class="btn btn-primary">Оформить</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

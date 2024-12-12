@@ -70,5 +70,15 @@ public class TrainingRequestServiceImpl implements TrainingRequestService {
         request.setStatus(status);
         return trainingRequestRepository.save(request);
     }
-
+@Override
+    public TrainingRequest cancelRequest(Long requestId) {
+        TrainingRequest request = trainingRequestRepository.findById(requestId)
+                .orElseThrow(() -> new IllegalArgumentException("Request not found"));
+        if (!request.getStatus().equals("PENDING")) {
+            throw new IllegalArgumentException("Only pending requests can be cancelled");
+        }
+        request.setStatus("CANCELLED");
+        trainingRequestRepository.save(request);
+        return request;
+    }
 }
