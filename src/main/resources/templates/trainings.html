@@ -1,47 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{layout :: layout(~{::title}, ~{::content})}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlexStudio - Тренировки</title>
-    <link href="/static/css/styles.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/index}">FlexStudio</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item" th:if="${isAdmin}">
-                    <a class="nav-link" th:href="@{/users}">Пользователи</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/trainings}">Тренировки</a>
-                </li>
-                <li class="nav-item" th:if="${!isAdmin}">
-                    <a class="nav-link" th:href="@{/subscriptions}">Подписки</a>
-                </li>
-                <li class="nav-item" th:if="${!isAdmin}">
-                    <a class="nav-link" th:href="@{/requests/user}">Мои заявки</a>
-                </li>
-                <li class="nav-item" th:if="${isAdmin}">
-                    <a class="nav-link" th:href="@{/requests/pending}">Все заявки</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logout}">Выход</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
+<body th:fragment="content">
 <div class="container mt-5">
     <h1 class="text-center">Тренировки</h1>
-    <div class="text-end mb-4" th:if="${isAdmin}">
+    <div class="text-end mb-4" sec:authorize="hasRole('ROLE_ADMIN')">
         <a href="/trainings/add" class="btn btn-success">Добавить занятие</a>
     </div>
     <div class="mt-4">
@@ -49,8 +14,8 @@
         <ul class="list-group">
             <li class="list-group-item" th:each="training : ${upcomingTrainings}">
                 <h4 th:text="${training.title}"></h4>
-                <p><strong>Дата:</strong> <span th:text="${training.formattedDateTime}"></span></p>
-                <form th:action="@{/requests/create(trainingId=${training.id})}" method="post" th:if="${!isAdmin}">
+                <p><strong>Дата:</strong> <span th:text="${#temporals.format(training.dateTime, dateFormats.dateTimeFormat)}"></span></p>
+                <form th:action="@{/requests/create(trainingId=${training.id})}" method="post" sec:authorize="!hasRole('ROLE_ADMIN')">
                     <button type="submit" class="btn btn-primary btn-sm">Записаться</button>
                 </form>
             </li>
@@ -61,11 +26,10 @@
         <ul class="list-group">
             <li class="list-group-item" th:each="training : ${pastTrainings}">
                 <h4 th:text="${training.title}"></h4>
-                <p><strong>Дата:</strong> <span th:text="${training.formattedDateTime}"></span></p>
+                <p><strong>Дата:</strong> <span th:text="${#temporals.format(training.dateTime, dateFormats.dateTimeFormat)}"></span></p>
             </li>
         </ul>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -28,7 +28,4 @@ public class Training {
 
     @Column(nullable = false)
     private boolean isCompleted;
-
-    @Column // Поле не сохраняется в базу, только для отображения
-    private String formattedDateTime;
 }

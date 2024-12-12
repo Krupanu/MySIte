@@ -31,13 +31,6 @@ public class TrainingRequestController {
 
     @GetMapping("/user")
     public String getUserRequests(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (userDetails instanceof UserDetails) {
-            model.addAttribute("userName",((UserDetails)userDetails).getUsername());
-        }
-
-        model.addAttribute("isAdmin",authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
-        model.addAttribute("authentication", authentication);
         Long userId = getUserIdFromDetails(userDetails);
         List<TrainingRequest> requests = trainingRequestService.getRequestsByUser(userId);
         model.addAttribute("requests", requests);
@@ -46,14 +39,6 @@ public class TrainingRequestController {
 
     @GetMapping("/pending")
     public String getPendingRequests(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object userDetails = authentication.getDetails();
-        if (userDetails instanceof UserDetails) {
-            model.addAttribute("userName",((UserDetails)userDetails).getUsername());
-        }
-
-        model.addAttribute("isAdmin",authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
-        model.addAttribute("authentication", authentication);
         List<TrainingRequest> requests = trainingRequestService.getAllPendingRequests();
         model.addAttribute("pendingRequests", requests);
         return "admin_requests";

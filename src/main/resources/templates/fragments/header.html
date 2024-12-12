@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header">
+<body th:fragment="header">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">FlexStudio</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -30,17 +30,17 @@
                 </li>
             </ul>
         </div>
-        <div class="text-end mb-4">
-            <div sec:authorize="isAuthenticated()">
-                <p class="mb-0">Вы вошли как: <strong sec:authentication="name"></strong></p>
-                <p class="text-muted" sec:authorize="hasRole('ROLE_ADMIN')">Администратор</p>
-                <p class="text-muted" sec:authorize="!hasRole('ROLE_ADMIN')">Пользователь</p>
-            </div>
-            <div sec:authorize="!isAuthenticated()">
-                <p class="text-muted">Вы не авторизованы.</p>
-            </div>
-        </div>
     </div>
 </nav>
+<div class="container-fluid text-end mb-4">
+    <div sec:authorize="isAuthenticated()">
+        <p class="mb-0">Вы вошли как: <strong sec:authentication="name"></strong></p>
+        <p class="text-muted" sec:authorize="hasRole('ROLE_ADMIN')">Администратор</p>
+        <p class="text-muted" sec:authorize="!hasRole('ROLE_ADMIN')">Пользователь</p>
+    </div>
+    <div sec:authorize="!isAuthenticated()">
+        <p class="text-muted">Вы не авторизованы.</p>
+    </div>
+</div>
 </body>
 </html>

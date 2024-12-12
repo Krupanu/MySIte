@@ -29,11 +29,11 @@ public class DataInitializer {
             }
 
             if (trainingRepository.count() == 0) {
-                trainingRepository.save(new Training(null, "Растяжка для новичков", LocalDateTime.of(2024, 12, 1, 10, 15), true, "dd.MM.yyyy HH:mm"));
-                trainingRepository.save(new Training(null, "Средний уровень: Спина и плечи", LocalDateTime.of(2024, 12, 3, 12, 0), true, "dd.MM.yyyy HH:mm"));
-                trainingRepository.save(new Training(null, "Гибкость для танцоров", LocalDateTime.of(2024, 12, 5, 15, 0), true, "dd.MM.yyyy HH:mm"));
-                trainingRepository.save(new Training(null, "Расслабление через растяжку", LocalDateTime.of(2024, 12, 8, 18, 30), true, "dd.MM.yyyy HH:mm"));
-                trainingRepository.save(new Training(null, "Глубокая растяжка", LocalDateTime.of(2024, 12, 15, 14, 0), false, "dd.MM.yyyy HH:mm"));
+                trainingRepository.save(new Training(null, "Растяжка для новичков", LocalDateTime.of(2024, 12, 1, 10, 15), true));
+                trainingRepository.save(new Training(null, "Средний уровень: Спина и плечи", LocalDateTime.of(2024, 12, 3, 12, 0), true));
+                trainingRepository.save(new Training(null, "Гибкость для танцоров", LocalDateTime.of(2024, 12, 5, 15, 0), true));
+                trainingRepository.save(new Training(null, "Расслабление через растяжку", LocalDateTime.of(2024, 12, 8, 18, 30), true));
+                trainingRepository.save(new Training(null, "Глубокая растяжка", LocalDateTime.of(2024, 12, 15, 14, 0), false));
             }
         };
     }

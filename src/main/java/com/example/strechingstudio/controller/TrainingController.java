@@ -28,29 +28,6 @@ public class TrainingController {
     @GetMapping
 
     public String showTrainings(Model model) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object userDetails = authentication.getDetails();
-        if (userDetails instanceof UserDetails) {
-            model.addAttribute("userName",((UserDetails)userDetails).getUsername());
-        }
-
-        model.addAttribute("isAdmin",authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
-        model.addAttribute("authentication", authentication);
-        List<Training> upcomingTrainings = trainingService.getUpcomingTrainings().stream()
-                .map(training -> {
-                    training.setFormattedDateTime(training.getDateTime().format(formatter));
-                    return training;
-                }).collect(Collectors.toList());
-
-        List<Training> pastTrainings = trainingService.getPastTrainings().stream()
-                .map(training -> {
-                    training.setFormattedDateTime(training.getDateTime().format(formatter));
-                    return training;
-                }).collect(Collectors.toList());
-
-
         model.addAttribute("upcomingTrainings", trainingService.getUpcomingTrainings());
         model.addAttribute("pastTrainings", trainingService.getPastTrainings());
         return "trainings";
@@ -59,14 +36,6 @@ public class TrainingController {
 
     @GetMapping("/add")
     public String showAddTrainingForm(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object userDetails = authentication.getDetails();
-        if (userDetails instanceof UserDetails) {
-            model.addAttribute("userName",((UserDetails)userDetails).getUsername());
-        }
-
-        model.addAttribute("isAdmin",authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
-        model.addAttribute("authentication", authentication);
         model.addAttribute("training", new Training());
         return "add_training";
     }

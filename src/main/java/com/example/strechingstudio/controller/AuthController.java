@@ -28,14 +28,6 @@ public class AuthController {
 
     @GetMapping("index")
     public String home(Model model){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object userDetails = authentication.getDetails();
-        if (userDetails instanceof UserDetails) {
-            model.addAttribute("userName",((UserDetails)userDetails).getUsername());
-        }
-
-        model.addAttribute("isAdmin",authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
-        model.addAttribute("authentication", authentication);
         return "index";
     }
 

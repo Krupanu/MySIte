@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
         userDto.setLastName(nameParts.length > 1 ? nameParts[1] : "");
 
         userDto.setEmail(user.getEmail());
+        userDto.setRoles(user.getRoles());
         return userDto;
     }
 
